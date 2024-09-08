@@ -5,6 +5,7 @@ from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
+from shot import *
 
 def main():
 
@@ -33,18 +34,25 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
+        for obj in updatable:
+            obj.update(dt)
+
+        for asteroid in asteroids:
+            if asteroid.check_collision(player):
+                print("Game Over!")
+                sys.exit()
+
+        for shot in shots:
+            for asteroid in asteroids:
+                if shot.check_collision(asteroid):
+                    shot.kill()
+                    asteroid.split()
+
+
         pygame.Surface.fill(screen, (0, 0, 0))
 
         for obj in drawable:
             obj.draw(screen)
-
-        for obj in updatable:
-            obj.update(dt)
-
-        for obj in asteroids:
-            if obj.check_collision(player):
-                print("Game Over!")
-                sys.exit()
 
         pygame.display.flip()
 
